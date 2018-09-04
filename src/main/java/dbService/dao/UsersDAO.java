@@ -18,7 +18,7 @@ public class UsersDAO {
     }
 
     public UsersDataSet get(long id) throws HibernateException {
-        return (UsersDataSet) session.get(UsersDataSet.class, id);
+        return session.get(UsersDataSet.class, id);
     }
 
     /*    public long getUserId(String name) throws HibernateException {

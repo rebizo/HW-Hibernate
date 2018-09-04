@@ -2,6 +2,7 @@ package dbService;
 
 import dbService.dao.UsersDAO;
 import dbService.dataSets.UsersDataSet;
+import org.h2.jdbcx.JdbcDataSource;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -11,9 +12,24 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.internal.SessionFactoryImpl;
 import org.hibernate.service.ServiceRegistry;
 
-public class DBService {
+
+public class DBService implements getSession  {
     private static final String hibernate_show_sql = "true";
     private static final String hibernate_hbm2ddl_auto = "create";
+
+    @Override
+    public void setPr() {
+
+        String url = "jdbc:h2:./h2db";
+        String name = "test";
+        String pass = "test";
+
+        JdbcDataSource ds = new JdbcDataSource();
+        ds.setURL(url);
+        ds.setUser(name);
+        ds.setPassword(pass);
+
+    }
 
     private final SessionFactory sessionFactory;
 
@@ -51,6 +67,8 @@ public class DBService {
         return configuration;
     }
 
+
+    @Override
     public UsersDataSet getUser(long id) throws DBException {
         try {
             Session session = sessionFactory.openSession();
@@ -63,6 +81,7 @@ public class DBService {
         }
     }
 
+    @Override
     public long addUser(String name) throws DBException {
         try {
             Session session = sessionFactory.openSession();
@@ -77,6 +96,7 @@ public class DBService {
         }
     }
 
+    @Override
     public void printConnectInfo() {
 
         //  Connection connection = sessionFactoryImpl.getConnectionProvider().getConnection();
@@ -95,8 +115,9 @@ public class DBService {
             });
             session.close();
 
-          // НИЖЕ ВСЕ ТОЖЕ НО БЕЗ ЛЮМБД
-/*        session.doWork(new Work() {
+
+        /* ниже все тоже без лямбд
+        session.doWork(new Work() {
             @Override
             public void execute(Connection connection1) throws SQLException {
                 System.out.println("DB name: " + connection1.getMetaData().getDatabaseProductName());
@@ -115,4 +136,6 @@ public class DBService {
         ServiceRegistry serviceRegistry = builder.build();
         return configuration.buildSessionFactory(serviceRegistry);
     }
+
+
 }
